@@ -12,7 +12,7 @@ export function LoadingState({
   return (
     <main aria-busy="true" className="status-page feedback-page">
       <header className="quiz-header">
-        <a aria-label="Occa home" className="wordmark" href="/">
+        <a aria-label="OOCA home" className="wordmark" href="/">
           <Image
             alt="Mindful"
             height={82}

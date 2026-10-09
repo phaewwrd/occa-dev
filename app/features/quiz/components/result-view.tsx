@@ -11,7 +11,7 @@ export function ResultView({ result }: ResultViewProps) {
   return (
     <main className="result-page">
       <header className="quiz-header">
-        <Link aria-label="Occa home" className="wordmark" href="/">
+        <Link aria-label="OOCA home" className="wordmark" href="/">
           <Image
             alt="Mindful"
             height={82}

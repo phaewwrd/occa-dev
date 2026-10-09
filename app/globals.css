@@ -8,7 +8,7 @@
   --line: #d9ded5;
   --accent: #bb694c;
   --accent-deep: #925239;
-  --font-body: var(--font-geist-sans), sans-serif;
+  --font-body: var(--font-montserrat);
 }
 
 * {
@@ -69,7 +69,7 @@ input:focus-visible + .option-index {
 }
 
 .wordmark {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-body);
   font-size: 2rem;
   font-weight: 600;
   line-height: 1;
@@ -126,7 +126,7 @@ input:focus-visible + .option-index {
 .landing-hero h1,
 .status-panel h1 {
   margin: 1.5rem 0 1rem;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-body);
   font-size: clamp(2.7rem, 6vw, 5.35rem);
   font-weight: 400;
   line-height: 1.08;
@@ -260,7 +260,7 @@ input:focus-visible + .option-index {
 
 .quiz-heading {
   margin: 3rem 0 2.4rem;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-body);
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   font-weight: 400;
   line-height: 1.2;
@@ -380,7 +380,7 @@ input:focus-visible + .option-index {
 
 .result-content h1 {
   margin: 0 auto 1.5rem;
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: var(--font-body);
   font-size: clamp(2.2rem, 5vw, 3.7rem);
   font-weight: 400;
   line-height: 1.14;

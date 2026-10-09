@@ -11,7 +11,7 @@ export default function ErrorPage({ reset }: ErrorPageProps) {
   return (
     <main className="status-page feedback-page">
       <header className="quiz-header">
-        <a aria-label="Occa home" className="wordmark" href="/">
+        <a aria-label="OOCA home" className="wordmark" href="/">
           <Image
             alt="Mindful"
             height={82}

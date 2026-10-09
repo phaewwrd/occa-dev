@@ -6,7 +6,7 @@ export default function HomePage() {
   return (
     <main className="landing-page">
       <header className="site-header">
-        <Link aria-label="Occa home" className="wordmark" href="/">
+        <Link aria-label="OOCA home" className="wordmark" href="/">
           <Image
             alt="Mindful"
             height={82}

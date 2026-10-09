@@ -102,7 +102,7 @@ export function QuizForm() {
   return (
     <main className="quiz-page">
       <header className="quiz-header">
-        <a aria-label="Occa home" className="wordmark" href="/">
+        <a aria-label="OOCA home" className="wordmark" href="/">
           <Image
             alt="Mindful"
             height={82}
