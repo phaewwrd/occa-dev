@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Quiz Web-App
 
-## Getting Started
+A web app where users answer 4 questions and instantly get a calculated result. No login required. Fully responsive on mobile and desktop.
 
-First, run the development server:
+## Links
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+| Item | Link |
+|---|---|
+| Website (Production) | |
+| Demo video | |
+
+---
+
+## Tech Stack
+
+| Area | Technology |
+|---|---|
+| Framework | [Next.js](https://nextjs.org/) (App Router) |
+| Language | [TypeScript](https://www.typescriptlang.org/) (strict mode) |
+| Database | [PostgreSQL](https://www.postgresql.org/) |
+| ORM | [Drizzle ORM](https://orm.drizzle.team/) |
+| Client data fetching | [TanStack Query](https://tanstack.com/query) |
+| Validation | [Zod](https://zod.dev/) |
+| Lint / Format | [Biome](https://biomejs.dev/) |
+
+### Code Architecture (Layered)
+
+```
+Component → Hook (TanStack Query) → Server Action → Service → Repository → Drizzle / PostgreSQL
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Server Action**: receives input, validates it with Zod, then calls the Service
+- **Service**: business logic, such as calculating the result
+- **Repository**: database access only
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How to Use
 
-## Learn More
+1. Click **Start** on the home page
+2. Answer all 4 questions, one at a time
+3. The app calculates and shows your result
+4. Click **Done** to return to the home page. Previous answers are cleared so you can start fresh
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Folder Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+src/
+├─ app/                 # Routes (pages)
+├─ features/quiz/
+│  ├─ actions/          # Server Actions
+│  ├─ services/         # Business logic
+│  ├─ repositories/     # Database access
+│  ├─ schemas/          # Zod schemas
+│  ├─ hooks/            # TanStack Query hooks
+│  └─ components/       # Feature UI
+├─ db/                  # Drizzle schema and client
+└─ lib/                 # Shared helpers
+public/                 # UI files and images
+```
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- No authentication. Anyone can use the app
+- The result is calculated on the server only
