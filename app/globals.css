@@ -64,7 +64,7 @@ input:focus-visible + .option-index {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 88px;
+  min-height: 70px;
   padding: 0 clamp(1.25rem, 6vw, 6.75rem);
 }
 
@@ -559,7 +559,7 @@ body {
 }
 
 .landing-hero {
-  width: min(100% - 3rem, 1480px);
+  width: min(100% - clamp(5rem, 11vw, 10rem), 1280px);
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(22rem, 0.9fr);
   align-items: center;
@@ -817,7 +817,7 @@ body {
 }
 
 .result-layout {
-  width: min(100% - 3rem, 1480px);
+  width: min(100% - clamp(5rem, 11vw, 10rem), 1280px);
   flex: 1;
   display: grid;
   grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
@@ -1166,4 +1166,12 @@ body {
   .feedback-state .button {
     margin-top: auto;
   }
+}
+
+.landing-page,
+.quiz-page,
+.result-page,
+.status-page {
+  min-height: 0;
+  flex: 1;
 }

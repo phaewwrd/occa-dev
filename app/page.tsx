@@ -1,24 +1,9 @@
 import Image from "next/image";
-import Link from "next/link";
 import { ResetQuizLink } from "@/app/features/quiz/components/reset-quiz-link";
 
 export default function HomePage() {
   return (
     <main className="landing-page">
-      <header className="site-header">
-        <Link aria-label="OOCA home" className="wordmark" href="/">
-          <Image
-            alt="Mindful"
-            height={82}
-            priority
-            src="/logo.png"
-            width={419}
-          />
-        </Link>
-        <a className="header-link" href="#about">
-          A moment for yourself
-        </a>
-      </header>
       <section aria-labelledby="landing-title" className="landing-hero">
         <div className="landing-copy-column">
           <p className="eyebrow">A MOMENT FOR YOU</p>
@@ -49,10 +34,6 @@ export default function HomePage() {
           />
         </aside>
       </section>
-      <footer className="landing-footer" id="about">
-        <span>A little space to get to know you.</span>
-        <span>Self-reflection, not a diagnosis</span>
-      </footer>
     </main>
   );
 }
