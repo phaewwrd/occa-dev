@@ -6,8 +6,12 @@ A web app where users answer 4 questions and instantly get a calculated result. 
 
 | Item | Link |
 |---|---|
-| Website (Production) | |
-| Demo video | |
+| Website (Production) | https://ooca-dev.vercel.app/ |
+| Demo video | 
+
+https://github.com/user-attachments/assets/7aef3f75-7755-4e52-9884-4286cdd71ebf
+
+ |
 
 ---
 
