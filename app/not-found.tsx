@@ -1,18 +1,20 @@
 import Link from "next/link";
+import { StatusCard } from "@/app/features/quiz/components/status-card";
 
 export default function NotFound() {
   return (
-    <main className="status-page">
-      <section className="status-panel">
-        <p className="eyebrow">NOT FOUND</p>
-        <h1>This reflection isn’t here.</h1>
-        <p>
-          The link may be incomplete or the result may no longer be available.
-        </p>
-        <Link className="button button-primary" href="/">
-          Return home <span aria-hidden="true">↗</span>
+    <StatusCard
+      action={
+        <Link
+          className="inline-flex min-h-12 items-center rounded-full border-2 border-primary px-7 font-medium text-primary-ink transition-colors hover:bg-primary/10"
+          href="/"
+        >
+          Back to the start
         </Link>
-      </section>
-    </main>
+      }
+      eyebrow="Not found"
+      message="The link may be incomplete, or this reflection is no longer available."
+      title="This reflection isn't here."
+    />
   );
 }

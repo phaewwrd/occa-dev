@@ -1,24 +1,28 @@
 "use client";
 
+import { StatusCard } from "@/app/features/quiz/components/status-card";
 
 interface ErrorPageProps {
-    error: Error & { digest?: string };
-    reset: () => void;
+  error: Error & { digest?: string };
+  reset: () => void;
 }
 
 export default function ErrorPage({ reset }: ErrorPageProps) {
-    return (
-        <main className="status-page feedback-page">
-            <section className="feedback-state" role="alert">
-                <span aria-hidden="true" className="error-icon">
-                    ↻
-                </span>
-                <h1>Something went wrong. Let’s try again.</h1>
-                <p>We couldn’t put your reflections together this time.</p>
-                <button className="button button-primary" onClick={reset} type="button">
-                    Try again
-                </button>
-            </section>
-        </main>
-    );
+  return (
+    <StatusCard
+      action={
+        <button
+          className="min-h-12 rounded-full border-2 border-primary px-7 font-medium text-primary-ink transition-colors hover:bg-primary/10"
+          onClick={reset}
+          type="button"
+        >
+          Try again
+        </button>
+      }
+      eyebrow="A small pause"
+      message="We couldn't put your reflection together this time."
+      role="alert"
+      title="Something went wrong."
+    />
+  );
 }

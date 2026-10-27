@@ -1,29 +1,42 @@
 import type { Metadata } from "next";
+import { Gochi_Hand, Inter, Nunito } from "next/font/google";
+import { Header } from "@/app/components/header";
 import { Providers } from "@/app/providers";
-import { Montserrat } from "next/font/google";
-import { QuizHeader } from "@/app/features/quiz/components/quiz-header";
-import { QuizFooter } from "@/app/features/quiz/components/quiz-footer";
-import "./globals.css";
 import "./globals.css";
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const gochiHand = Gochi_Hand({
+  variable: "--font-gochi-hand",
+  subsets: ["latin"],
+  weight: "400",
+});
+
+const nunito = Nunito({
+  variable: "--font-nunito",
+  subsets: ["latin"],
+  weight: "900",
 });
 
 export const metadata: Metadata = {
-  title: "OOCA | A moment to reflect",
-  description: "A short, thoughtful pause for your next decision.",
+  title: "mindfull | A moment to understand yourself",
+  description: "A short, gentle self-reflection. No right or wrong answers.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${montserrat.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col">
+    <html
+      lang="en"
+      className={`${inter.variable} ${gochiHand.variable} ${nunito.variable} h-full antialiased`}
+    >
+      <body className="flex min-h-dvh flex-col overflow-x-hidden">
         <Providers>
-          <QuizHeader />
+          <Header />
           {children}
-          <QuizFooter />
         </Providers>
       </body>
     </html>

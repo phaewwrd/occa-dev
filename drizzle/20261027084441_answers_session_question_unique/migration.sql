@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "answers_session_question_unique" ON "answers" ("session_id","question_id");
