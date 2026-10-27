@@ -5,6 +5,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -46,6 +47,7 @@ export const questionOptions = pgTable("question_options", {
     .references(() => questions.id, {
       onDelete: "cascade",
     }),
+  icons: text("icons"),
 
   label: text("label").notNull(),
 
@@ -64,29 +66,39 @@ export const reflectionSessions = pgTable("reflection_sessions", {
 });
 
 // User answers
-export const answers = pgTable("answers", {
-  id: uuid("id").defaultRandom().primaryKey(),
+export const answers = pgTable(
+  "answers",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
 
-  sessionId: uuid("session_id")
-    .notNull()
-    .references(() => reflectionSessions.id, {
-      onDelete: "cascade",
-    }),
+    sessionId: uuid("session_id")
+      .notNull()
+      .references(() => reflectionSessions.id, {
+        onDelete: "cascade",
+      }),
 
-  questionId: uuid("question_id")
-    .notNull()
-    .references(() => questions.id, {
-      onDelete: "cascade",
-    }),
+    questionId: uuid("question_id")
+      .notNull()
+      .references(() => questions.id, {
+        onDelete: "cascade",
+      }),
 
-  optionId: uuid("option_id")
-    .notNull()
-    .references(() => questionOptions.id),
+    optionId: uuid("option_id")
+      .notNull()
+      .references(() => questionOptions.id),
 
-  score: integer("score").notNull(),
+    score: integer("score").notNull(),
 
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    // One answer per question per session, so retries upsert instead of duplicating
+    uniqueIndex("answers_session_question_unique").on(
+      table.sessionId,
+      table.questionId,
+    ),
+  ],
+);
 
 // Final reflection
 export const reflectionResults = pgTable("reflection_results", {

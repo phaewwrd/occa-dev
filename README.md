@@ -41,10 +41,21 @@ Component → Hook (TanStack Query) → Server Action → Service → Repository
 
 ## How to Use
 
-1. Click **Start** on the home page
-2. Answer all 4 questions, one at a time
-3. The app calculates and shows your result
-4. Click **Done** to return to the home page. Previous answers are cleared so you can start fresh
+1. Tap the **next** button on the intro page. This starts a new reflection session
+2. Answer each situation. Choosing an option saves it right away and moves on automatically
+3. After the last question the app calculates your result and shows it
+4. On the result page: **Share** saves the card as an image (native share sheet on mobile, download on desktop), **Home** and **Start over** return to the intro
+
+## Database migrations
+
+Migrations live in `drizzle/`. The first one (`*_baseline`) mirrors the schema that was already pushed to the database, so on an existing database apply only the later migrations, e.g.:
+
+```sql
+-- drizzle/*_answers_session_question_unique
+CREATE UNIQUE INDEX IF NOT EXISTS "answers_session_question_unique" ON "answers" ("session_id","question_id");
+```
+
+On a fresh database run `pnpm drizzle-kit migrate`.
 
 ---
 

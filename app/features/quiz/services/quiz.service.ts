@@ -1,74 +1,131 @@
-import { AppError, NotFoundError, ValidationError } from "@/app/lib/errors";
+import {
+  AppError,
+  ConflictError,
+  NotFoundError,
+  ValidationError,
+} from "@/app/lib/errors";
 import { questionRepository } from "../repositories/question.repository";
 import { reflectionMessageRepository } from "../repositories/reflection-message.repository";
+import { reflectionSessionRepository } from "../repositories/reflection-session.repository";
 import { submissionRepository } from "../repositories/submission.repository";
 import {
   reflectionSnapshotSchema,
-  type SubmitQuizInput,
+  type SaveAnswerInput,
 } from "../schemas/quiz.schema";
+import type { QuizQuestion, QuizResultView } from "../types/quiz.types";
 import { calculateResult } from "../utils/calculate-result";
 import { requireReflectionMessage } from "../utils/require-reflection-message";
 import { validateAnswers } from "../utils/validate-answers";
 
+async function requireSession(sessionId: string) {
+  const session = await reflectionSessionRepository.findById(sessionId);
+  if (!session) {
+    throw new NotFoundError("This reflection could not be found.");
+  }
+  return session;
+}
+
 export const quizService = {
-  async getQuestions() {
-    const questions = await questionRepository.findAllActiveWithOptions();
-    return questions.map((question) => ({
-      id: question.id,
-      situation: question.situation,
-      dimension: question.dimension,
-      order: question.order,
-      options: question.options.map(({ id, label, order }) => ({
-        id,
-        label,
-        order,
-      })),
-    }));
+  async startSession() {
+    return { sessionId: await reflectionSessionRepository.create() };
   },
 
-  async submit(input: SubmitQuizInput) {
+  async getReflection(sessionId: string) {
+    const session = await requireSession(sessionId);
+    const [questions, savedAnswers] = await Promise.all([
+      questionRepository.findAllActiveWithOptions(),
+      reflectionSessionRepository.findAnswers(sessionId),
+    ]);
+
+    return {
+      sessionId,
+      completed: session.completedAt !== null,
+      questions: questions.map(
+        (question): QuizQuestion => ({
+          id: question.id,
+          situation: question.situation,
+          dimension: question.dimension,
+          order: question.order,
+          options: question.options.map(({ id, label, order, icons }) => ({
+            id,
+            label,
+            order,
+            icon: icons,
+          })),
+        }),
+      ),
+      answers: Object.fromEntries(
+        savedAnswers.map((answer) => [answer.questionId, answer.optionId]),
+      ),
+    };
+  },
+
+  async saveAnswer(input: SaveAnswerInput) {
+    const session = await requireSession(input.sessionId);
+    if (session.completedAt) {
+      throw new ConflictError("This reflection is already complete.");
+    }
+
     const questions = await questionRepository.findAllActiveWithOptions();
+    const question = questions.find((item) => item.id === input.questionId);
+    const option = question?.options.find((item) => item.id === input.optionId);
+    if (!question || !option) {
+      throw new ValidationError("This answer doesn't match the question.");
+    }
+
+    await reflectionSessionRepository.upsertAnswer({
+      sessionId: input.sessionId,
+      questionId: question.id,
+      optionId: option.id,
+      score: option.score,
+    });
+  },
+
+  async completeSession(sessionId: string) {
+    const session = await requireSession(sessionId);
+    if (session.completedAt) {
+      return { sessionId };
+    }
+
+    const [questions, savedAnswers] = await Promise.all([
+      questionRepository.findAllActiveWithOptions(),
+      reflectionSessionRepository.findAnswers(sessionId),
+    ]);
     if (questions.length !== 4) {
       throw new ValidationError(
         "The quiz must have exactly four active questions.",
       );
     }
 
-    const { dimensionScores, persistedAnswers } = validateAnswers(
+    const activeQuestionIds = new Set(questions.map((question) => question.id));
+    const { dimensionScores } = validateAnswers(
       questions,
-      input.answers,
+      savedAnswers.filter((answer) => activeQuestionIds.has(answer.questionId)),
     );
     const calculation = calculateResult(dimensionScores);
     const message = await reflectionMessageRepository.findByKey(
       calculation.key,
     );
-    if (!message) {
-      throw new AppError(
-        "CONTENT_UNAVAILABLE",
-        "The reflection for this result is unavailable.",
-        500,
-      );
-    }
-
     const snapshot = requireReflectionMessage(message);
-    const resultId = await submissionRepository.create({
-      answers: persistedAnswers,
+
+    await reflectionSessionRepository.complete({
+      sessionId,
       calculation,
       snapshot,
     });
 
-    return { resultId };
+    return { sessionId };
   },
 
-  async getResult(id: string) {
-    const result = await submissionRepository.findResultById(id);
-    if (!result) {
+  async getResult(id: string): Promise<QuizResultView> {
+    const row = await submissionRepository.findResultBySessionOrResultId(id);
+    if (!row) {
       throw new NotFoundError("This reflection could not be found.");
     }
 
     let snapshot: unknown;
     try {
-      snapshot = JSON.parse(result.reflectionText);
+      snapshot = JSON.parse(row.result.reflectionText);
     } catch {
       throw new AppError(
         "INVALID_SNAPSHOT",
@@ -86,11 +143,13 @@ export const quizService = {
     }
 
     return {
-      id: result.id,
+      id: row.result.id,
+      sessionId: row.result.sessionId,
       ...reflection.data,
-      reflectionType: result.reflectionType,
-      maxScore: result.maxScore,
-      focusCount: result.focusCount,
+      reflectionType: row.result.reflectionType,
+      maxScore: row.result.maxScore,
+      focusCount: row.result.focusCount,
+      completedAt: (row.completedAt ?? row.result.createdAt).toISOString(),
     };
   },
 };

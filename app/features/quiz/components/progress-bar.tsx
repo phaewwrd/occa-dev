@@ -1,30 +1,28 @@
+"use client";
+
+import { motion } from "motion/react";
+
 interface ProgressBarProps {
-  current: number;
-  filled: number;
+  value: number;
   total: number;
 }
 
-export function ProgressBar({ current, filled, total }: ProgressBarProps) {
-  const segments = Array.from(
-    { length: total },
-    (_, index) => `progress-segment-${index + 1}`,
-  );
+export function ProgressBar({ value, total }: ProgressBarProps) {
   return (
     <div
-      aria-label={`Question ${current} of ${total}`}
+      aria-label="Reflection progress"
       aria-valuemax={total}
       aria-valuemin={0}
-      aria-valuenow={filled}
-      aria-valuetext={`Question ${current} of ${total}, ${filled} answered`}
-      className="progress-track"
+      aria-valuenow={value}
+      className="absolute inset-x-0 top-0 h-1 bg-ink/[0.06]"
       role="progressbar"
     >
-      {segments.map((segment, index) => (
-        <span
-          className={`progress-segment${index < filled ? " is-filled" : ""}`}
-          key={segment}
-        />
-      ))}
+      <motion.div
+        animate={{ scaleX: total > 0 ? value / total : 0 }}
+        className="h-full origin-left rounded-r-full bg-primary"
+        initial={false}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      />
     </div>
   );
 }

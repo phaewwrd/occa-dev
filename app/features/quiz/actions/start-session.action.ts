@@ -3,13 +3,12 @@
 import type { ActionResult } from "@/app/lib/action-result";
 import { toActionError } from "@/app/lib/errors";
 import { quizService } from "../services/quiz.service";
-import type { QuizQuestion } from "../types/quiz.types";
 
-export async function getQuestionsAction(): Promise<
-  ActionResult<QuizQuestion[]>
+export async function startSessionAction(): Promise<
+  ActionResult<{ sessionId: string }>
 > {
   try {
-    return { ok: true, data: await quizService.getQuestions() };
+    return { ok: true, data: await quizService.startSession() };
   } catch (error) {
     return { ok: false, error: toActionError(error) };
   }

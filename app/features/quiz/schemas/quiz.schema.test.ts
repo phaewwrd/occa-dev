@@ -1,15 +1,25 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { submitQuizSchema } from "./quiz.schema";
+import { saveAnswerSchema } from "./quiz.schema";
 
 test("accepts canonical PostgreSQL UUIDs regardless of version and variant bits", () => {
   assert.equal(
-    submitQuizSchema.safeParse({
-      answers: [1, 2, 3, 4].map((number) => ({
-        questionId: `10000000-0000-0000-0000-${String(number).padStart(12, "0")}`,
-        optionId: `20000000-0000-0000-0000-${String(number).padStart(12, "0")}`,
-      })),
+    saveAnswerSchema.safeParse({
+      sessionId: "00000000-0000-0000-0000-000000000001",
+      questionId: "10000000-0000-0000-0000-000000000001",
+      optionId: "20000000-0000-0000-0000-000000000001",
     }).success,
     true,
+  );
+});
+
+test("rejects malformed ids", () => {
+  assert.equal(
+    saveAnswerSchema.safeParse({
+      sessionId: "not-a-uuid",
+      questionId: "10000000-0000-0000-0000-000000000001",
+      optionId: "20000000-0000-0000-0000-000000000001",
+    }).success,
+    false,
   );
 });
