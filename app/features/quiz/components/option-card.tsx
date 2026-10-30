@@ -39,7 +39,7 @@ export function OptionCard({
       type="button"
     >
       <span className="transition-[translate] duration-200 group-hover:-translate-y-0.5">
-        <OptionIcon src={option.icon} />
+        <OptionIcon icon={option.icon} />
       </span>
       <span className="relative inline-block px-2 py-1 text-[0.92rem] leading-snug text-ink md:text-lg">
         <motion.span

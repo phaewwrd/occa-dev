@@ -1,12 +1,12 @@
 "use client";
 
+import dynamicIconImports from "lucide-react/dynamicIconImports";
 import { AnimatePresence, motion } from "motion/react";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { CircleButton } from "@/app/components/circle-button";
 import { MascotPlaceholder } from "@/app/components/mascot-placeholder";
 import { WindowCard } from "@/app/components/window-card";
-import { cloudinaryUrl } from "@/app/lib/cloudinary";
 import { useCompleteSession } from "../hooks/use-complete-session";
 import { useSaveAnswer } from "../hooks/use-save-answer";
 import type { QuizQuestion } from "../types/quiz.types";
@@ -60,11 +60,11 @@ export function ReflectionFlow({
     }
   }, [completing, runCompletion]);
 
-  // Warm the browser cache so the next question's icons appear with it.
+  // Load the next question's icon chunks early so they appear with it.
   useEffect(() => {
     for (const option of questions[step + 1]?.options ?? []) {
       if (option.icon) {
-        new window.Image().src = cloudinaryUrl(option.icon);
+        dynamicIconImports[option.icon.name]();
       }
     }
   }, [questions, step]);

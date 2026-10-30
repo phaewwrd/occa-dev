@@ -1,17 +1,15 @@
 "use client";
 
-import Image from "next/image";
+import { DynamicIcon } from "lucide-react/dynamic";
 import { useState } from "react";
-import { cloudinaryUrl } from "@/app/lib/cloudinary";
+import type { OptionIconData } from "../utils/parse-option-icon";
 
 interface OptionIconProps {
-  src: string | null;
+  icon: OptionIconData | null;
 }
 
-export function OptionIcon({ src }: OptionIconProps) {
-  const [status, setStatus] = useState<"loading" | "loaded" | "error">(
-    src ? "loading" : "error",
-  );
+export function OptionIcon({ icon }: OptionIconProps) {
+  const [loaded, setLoaded] = useState(false);
 
   return (
     <span
@@ -20,21 +18,22 @@ export function OptionIcon({ src }: OptionIconProps) {
     >
       <span
         className={`absolute inset-2 rounded-full bg-primary/15 transition-opacity duration-300 ${
-          status === "loaded" ? "opacity-0" : "opacity-100"
+          loaded ? "opacity-0" : "opacity-100"
         }`}
       />
-      {src && status !== "error" && (
-        <Image
-          alt=""
-          className={`object-contain transition-opacity duration-300 ${
-            status === "loaded" ? "opacity-100" : "opacity-0"
-          }`}
-          fill
-          onError={() => setStatus("error")}
-          onLoad={() => setStatus("loaded")}
-          sizes="80px"
-          src={cloudinaryUrl(src)}
-          unoptimized
+      {icon && (
+        <DynamicIcon
+          className={`absolute inset-0 size-full p-2 transition-opacity duration-300 ${
+            loaded ? "opacity-100" : "opacity-0"
+          } ${icon.color ? "" : "text-ink"}`}
+          color={icon.color ?? undefined}
+          name={icon.name}
+          ref={(node) => {
+            if (node) {
+              setLoaded(true);
+            }
+          }}
+          strokeWidth={1.5}
         />
       )}
     </span>
