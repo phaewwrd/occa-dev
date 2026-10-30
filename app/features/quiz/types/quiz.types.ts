@@ -1,4 +1,5 @@
 import type { Dimension, ReflectionType } from "../utils/calculate-result";
+import type { OptionIconData } from "../utils/parse-option-icon";
 
 export interface QuizQuestion {
   id: string;
@@ -12,8 +13,8 @@ export interface QuizOption {
   id: string;
   label: string;
   order: number;
-  // Cloudinary image URL, optional until every option has artwork
-  icon: string | null;
+  // Lucide icon parsed from the stored JSX string, optional until every option has one
+  icon: OptionIconData | null;
 }
 
 export interface QuizResultView {

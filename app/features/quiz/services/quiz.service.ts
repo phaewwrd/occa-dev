@@ -14,6 +14,7 @@ import {
 } from "../schemas/quiz.schema";
 import type { QuizQuestion, QuizResultView } from "../types/quiz.types";
 import { calculateResult } from "../utils/calculate-result";
+import { parseOptionIcon } from "../utils/parse-option-icon";
 import { requireReflectionMessage } from "../utils/require-reflection-message";
 import { validateAnswers } from "../utils/validate-answers";
 
@@ -50,7 +51,7 @@ export const quizService = {
             id,
             label,
             order,
-            icon: icons,
+            icon: parseOptionIcon(icons),
           })),
         }),
       ),
